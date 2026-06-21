@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  background: linear-gradient(120deg,#ff9a9e,#fad0c4,#fbc2eb);
+  background-size: 400% 400%;
+  animation: bgMove 10s ease infinite;
+}
+
+/* background animation */
+@keyframes bgMove {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/* LEFT SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(15px);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-right: 1px solid rgba(255,255,255,0.2);
+}
+
+.title {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.cat {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+  user-select: none;
+}
+
+.cat:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.35);
+}
+
+/* MAIN AREA */
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.card {
+  width: 70%;
+  max-width: 600px;
+  padding: 30px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  color: white;
+  text-align: center;
+  transform: translateY(0);
+  transition: all 0.5s ease;
+}
+
+.card.fade {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+h1 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.text {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* floating hearts */
+.heart {
+  position: absolute;
+  bottom: -20px;
+  color: rgba(255,255,255,0.7);
+  animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div class="title">💗 categories</div>
+
+  <div class="cat" onclick="show('looks')">looks</div>
+  <div class="cat" onclick="show('personality')">personality</div>
+  <div class="cat" onclick="show('comfort')">comfort</div>
+  <div class="cat" onclick="show('deep')">deep talks</div>
+  <div class="cat" onclick="show('feelings')">feelings</div>
+  <div class="cat" onclick="show('hopes')">hopes & wishes</div>
+  <div class="cat" onclick="show('thanks')">thank you</div>
+</div>
+
+<div class="main">
+  <div class="card" id="card">
+    <h1 id="title">click a category 💗</h1>
+    <div class="text" id="text">everything here is something I never said properly.</div>
+  </div>
+</div>
+
+<script>
+
+const data = {
+  looks: [
+    "I like your eyes especially when you laugh cos they twinkle.",
+    "I love your smile hahaha"
+  ],
+
+  personality: [
+    "You’re smart and independent? Hahahahaha, I think you’re independent in some ways",
+    "I like how kind you are toward me, and I’ve never once felt disrespected by you, even in the smallest things."
+  ],
+
+  comfort: [
+    "I like how you make me feel calm. There’s just something about you.",
+    "Im so comfortable with you"
+  ],
+
+  deep: [
+    "I like how when I start thinking about things that don’t have answers, u were the only one who got curious with me.",
+    "We could talk about life and the universe for hours and I’d never get bored."
+  ],
+
+  feelings: [
+    "I like you as a person",
+    "I wanna be your friend so bad",
+    "I like your laugh and the way you talk"
+  ],
+
+  hopes: [
+    "I hope we can talk more and I hope I can see you more",
+    "I hope you achieve all the things you’ve talked about",
+    "I hope life treats you better.",
+    "I hope you don’t settle for less because you’re someone else’s dream."
+  ],
+
+  thanks: [
+    "Thank you for everything. You made me want to change for the better.",
+    "Besides my family, it’s you.",
+    "I don’t know why, but you made me better."
+  ]
+};
+
+let index = 0;
+let current = "looks";
+
+const card = document.getElementById("card");
+const text = document.getElementById("text");
+const title = document.getElementById("title");
+
+function show(category) {
+  current = category;
+  index = 0;
+
+  card.classList.add("fade");
+
+  setTimeout(() => {
+    title.innerText = category.toUpperCase();
+
+    text.innerText = data[category][index];
+
+    card.classList.remove("fade");
+  }, 300);
+}
+
+/* click card to cycle messages */
+card.onclick = () => {
+  if (!data[current]) return;
+
+  index = (index + 1) % data[current].length;
+
+  card.classList.add("fade");
+
+  setTimeout(() => {
+    text.innerText = data[current][index];
+    card.classList.remove("fade");
+  }, 250);
+};
+
+/* floating hearts */
+function heart() {
+  const h = document.createElement("div");
+  h.classList.add("heart");
+  h.innerHTML = "❤";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = Math.random() * 20 + 10 + "px";
+  h.style.animationDuration = (Math.random() * 4 + 3) + "s";
+  document.body.appendChild(h);
+
+  setTimeout(() => h.remove(), 7000);
+}
+
+setInterval(heart, 250);
+
+</script>
+
+</body>
+</html>
